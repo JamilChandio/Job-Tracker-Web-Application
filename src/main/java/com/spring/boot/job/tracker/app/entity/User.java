@@ -36,22 +36,23 @@ public class User {
     @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    @Column(name = "password", length = 255, nullable = false)
+    @Column(name = "password", length = 16, nullable = false)
     private String password;
 
     @Column(name = "full_name", length = 100, nullable = false)
     private String fullName;
 
-    @Column(name = "role", length = 30, nullable = false)
+    @Column(name = "role", length = 10, nullable = false)
     private String role;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
 
-    @Column(name = "age")
+
+    @Column(name = "age" , length = 3)
     private Integer age;
 
     @Column(name = "gender", length = 10)

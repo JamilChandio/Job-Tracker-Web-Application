@@ -2,15 +2,16 @@ package com.spring.boot.job.tracker.app.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.boot.job.tracker.app.dtos.UserRequestDto;
 import com.spring.boot.job.tracker.app.dtos.UserResponseDto;
 import com.spring.boot.job.tracker.app.dtos.user.UserRegistrationDto;
 import com.spring.boot.job.tracker.app.entity.User;
+import com.spring.boot.job.tracker.app.exception.UserAlreadyExistsException;
 import com.spring.boot.job.tracker.app.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,8 +40,16 @@ public class UserService {
         }
     }
 
+
+    @Transactional
     public void registerUser(UserRegistrationDto userDto) {
 
+        if(userRepository.existsByEmail(userDto.getEmail())){
+            throw new UserAlreadyExistsException("Email already exists: " + userDto.getEmail());
+        }else if(userRepository.existsByUsername(userDto.getUsername())){
+            throw new UserAlreadyExistsException("Username already exists: " + userDto.getUsername());
+        }
+        
         log.info("Registering user {}", userDto);
         User userEntity = User.builder()
                 .username(userDto.getUsername())
@@ -52,19 +61,15 @@ public class UserService {
                 .address(userDto.getAddress())
                 .age(userDto.getAge())
                 .gender(userDto.getGender())
-                // Default / Required Fields
                 .failedAttempts(0)
                 .accountLocked(false)
                 .isActive(true)
-                .lastLoginAt(null) // optional, will be updated later
-                .profileImageUrl(null) // optional, can be updated later
+                .lastLoginAt(null) 
+                .profileImageUrl(null) 
                 .build();
 
         User savedUser = userRepository.save(userEntity);
         log.info("User registered successfully with ID: {}", savedUser.getUserId());
-
-        // Registration logic goes here
-        // For example, save the user to the database
     }
 
 }

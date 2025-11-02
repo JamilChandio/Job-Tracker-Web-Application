@@ -1,0 +1,82 @@
+# ===========================================
+# Java / Spring Boot .gitignore
+# ===========================================
+
+### Compiled source files
+*.class
+*.jar
+*.war
+*.ear
+
+### Logs
+logs/
+*.log
+
+### Temporary files
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+### OS-specific files
+.DS_Store
+Thumbs.db
+
+### IDEs and Editors
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+### Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+### Gradle (in case you use it later)
+.gradle/
+build/
+
+### Spring Boot specific
+# Embedded Tomcat, H2, or temp files
+*.h2.db
+*.mv.db
+*.db
+*.sqlite
+*.log
+!src/main/resources/**
+
+### Environment files
+.env
+*.env
+
+### Security / Credentials
+application-*.yml
+application-*.yaml
+application-*.properties
+!application.properties
+!application.yml
+!application.yaml
+
+### Node (if you use npm/yarn for frontend)
+node_modules/
+dist/
+build/
+package-lock.json
+yarn.lock
+
+### Others
+*.orig
+*.rej

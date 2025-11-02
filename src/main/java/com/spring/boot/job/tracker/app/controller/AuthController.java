@@ -1,14 +1,12 @@
 package com.spring.boot.job.tracker.app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.spring.boot.job.tracker.app.dtos.user.User;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.spring.boot.job.tracker.app.dtos.user.UserLoginDto;
 import com.spring.boot.job.tracker.app.dtos.user.UserRegistrationDto;
 import com.spring.boot.job.tracker.app.service.UserService;
 
@@ -20,17 +18,26 @@ public class AuthController {
 
     private static UserService userServiceObj;
 
-    // @Autowired
+    // @Autowired   -- If there is only one constructor, @Autowired can be omitted  
     public AuthController(UserService userService) {
         userServiceObj = userService;
     }
 
 
     @GetMapping("/login")
-    public String getMethodName(Model model) {
-        model.addAttribute("user", new User());
-        return "login"; // resolves to templates/login.html
+    public String getLoginPage(Model model) {
+        model.addAttribute("user", new UserLoginDto());
+        return "login"; 
     }
+
+    @PostMapping("/login")
+    public String processUserLogin(@ModelAttribute("user") UserLoginDto userLoginDto , Model model){
+        log.info("Authenticate user for login {}",userLoginDto);
+        // model.addAttribute("username", userLoginDto.getUsername());
+
+        return "redirect:/user/dashboard?username="+userLoginDto.getUsername();
+    }
+
 
     @GetMapping("/register")
     public String register(Model model){
@@ -48,16 +55,15 @@ public class AuthController {
         userDto.setPassword("test@123");
 
         model.addAttribute("user", userDto);
-        return "register"; // resolves to templates/register.html
+        return "register"; 
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute UserRegistrationDto userDto){
+    public String register(@ModelAttribute("user") UserRegistrationDto userDto, RedirectAttributes redirectAttributes){
         log.info("User Registration Request Dto: {}", userDto);
-
         userServiceObj.registerUser(userDto);
-        // Registration logic goes here
-        return "redirect:/login";
+        redirectAttributes.addFlashAttribute("registrationSuccess", true);
+        return "redirect:/register";
     }
     
 
