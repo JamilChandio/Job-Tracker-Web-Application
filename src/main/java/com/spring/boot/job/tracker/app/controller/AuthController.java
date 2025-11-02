@@ -1,5 +1,7 @@
 package com.spring.boot.job.tracker.app.controller;
 
+import java.sql.SQLException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

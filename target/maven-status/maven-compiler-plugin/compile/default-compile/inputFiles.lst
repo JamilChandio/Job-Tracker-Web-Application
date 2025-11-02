@@ -7,7 +7,6 @@
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/JobApplication.java
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/UserRequestDto.java
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/UserResponseDto.java
-/home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/user/User.java
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/user/UserLoginDto.java
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/dtos/user/UserRegistrationDto.java
 /home/jameel/IdeaProjects/Git/Job-Tracker-Web-Application/src/main/java/com/spring/boot/job/tracker/app/entity/User.java

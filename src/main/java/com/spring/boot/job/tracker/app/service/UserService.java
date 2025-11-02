@@ -1,5 +1,6 @@
 package com.spring.boot.job.tracker.app.service;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -42,12 +43,14 @@ public class UserService {
 
 
     @Transactional
-    public void registerUser(UserRegistrationDto userDto) {
+    public void registerUser(UserRegistrationDto userDto){
 
-        if(userRepository.existsByEmail(userDto.getEmail())){
-            throw new UserAlreadyExistsException("Email already exists: " + userDto.getEmail());
-        }else if(userRepository.existsByUsername(userDto.getUsername())){
+        if(userRepository.existsByUsername(userDto.getUsername())){
             throw new UserAlreadyExistsException("Username already exists: " + userDto.getUsername());
+        }else if(userRepository.existsByEmail(userDto.getEmail())){
+            throw new UserAlreadyExistsException("Email already exists: " + userDto.getEmail());
+        }else if("jamil".equalsIgnoreCase(userDto.getUsername())){
+            throw new RuntimeException("INTENTIONALLY THROWN EXCEPTION");
         }
         
         log.info("Registering user {}", userDto);
