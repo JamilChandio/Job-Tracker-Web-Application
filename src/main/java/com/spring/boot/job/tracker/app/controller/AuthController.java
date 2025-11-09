@@ -45,7 +45,7 @@ public class AuthController {
         if (userServiceObj.authenticateUser(userLoginDto)) {
 
             emailServiceObj.sendEmail(
-                    "wahidiccg@gmail.com", 
+                    "test@gmail.com", 
                     "Welcome Back to Job Tracker!",
                     "Hi " + userLoginDto.getUsername()
                             + ", welcome back! You can now manage your job applications easily."
@@ -58,7 +58,7 @@ public class AuthController {
                     System.out.println("Sending Email in else");
 
                    emailServiceObj.sendEmail(
-                    "wahidiccg@gmail.com", 
+                    "test@gmail.com", 
                     "Unauthorized Access to the Account",
                     "Hi " + userLoginDto.getUsername()
                             + ", Someone tried to login into your account, consider changing your password."
