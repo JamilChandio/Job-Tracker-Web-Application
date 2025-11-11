@@ -4,6 +4,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.spring.boot.job.tracker.app.dtos.user.UserLoginDto;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -17,8 +22,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAuthenticationException.class)
     public String handleUserAuthenticationException(UserAuthenticationException ex, Model model) {
-        ex.printStackTrace();
+        log.error("Authentication error: {}", ex.getMessage(), ex);
         model.addAttribute("loginError", ex.getMessage());
+        model.addAttribute("user", new UserLoginDto());
         return "login";
     }
 
