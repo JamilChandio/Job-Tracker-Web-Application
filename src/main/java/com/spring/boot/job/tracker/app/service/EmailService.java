@@ -41,4 +41,35 @@ public class EmailService {
         log.info("Sending Welcome Email to {}",to);
         mailSender.send(message);
     }
+
+
+    @Async
+    public void sendEmailOTP(String to, String username, String otp) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false); 
+
+        helper.setFrom(fromEmail);
+        helper.setTo(to);
+        helper.setSubject("Your Job Tracker Password Reset OTP");
+
+        String textContent = """
+                Hello %s,
+
+                You requested to reset your password on Job Tracker.
+
+                Your One-Time Password (OTP) is: %s
+
+                This OTP is valid for 5 minutes. Please do not share it with anyone.
+
+                If you did not request this, please consider changing your password immediately.
+
+                - Job Tracker Support Team
+                """.formatted(username, otp);
+
+        helper.setText(textContent, false); 
+
+        log.info("Sending OTP Email to {}", to);
+        mailSender.send(message);
+    }
+
 }

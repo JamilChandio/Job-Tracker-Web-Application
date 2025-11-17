@@ -90,4 +90,13 @@ public class UserService {
             throw new UserAuthenticationException("Invalid Credentials!");
     }
 
+
+    public void resetPassword(String usernameOrEmail) throws MessagingException{
+        User user = USER_REPOSITORY.findByUsernameOrEmail(usernameOrEmail)
+        .orElseThrow(() -> new UserAuthenticationException("User not found against "+usernameOrEmail));
+
+        emailServiceObj.sendEmailOTP(user.getEmail(), user.getUsername(), "123456");
+    
+    }
+
 }

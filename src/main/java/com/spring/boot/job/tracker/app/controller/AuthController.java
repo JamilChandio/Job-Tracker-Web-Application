@@ -1,6 +1,5 @@
 package com.spring.boot.job.tracker.app.controller;
 
-import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,11 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.spring.boot.job.tracker.app.dtos.user.UserLoginDto;
 import com.spring.boot.job.tracker.app.dtos.user.UserRegistrationDto;
-import com.spring.boot.job.tracker.app.service.EmailService;
 import com.spring.boot.job.tracker.app.service.UserService;
 
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 
 @Slf4j
 @Controller
@@ -69,5 +71,25 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("registrationSuccess", true);
         return "redirect:/register";
     }
+
+    @GetMapping("/reset")
+    public String resetPassword(Model model) {
+        model.addAttribute("user", new UserLoginDto());
+        return "reset";
+    }
+
+    @PostMapping("/reset")
+    public String handleReset(@RequestParam("identifier") String usernameOrEmail,Model model) throws MessagingException {
+        
+        log.info("Reset Account for user = " + usernameOrEmail);
+
+        userServiceObj.resetPassword(usernameOrEmail);
+
+        model.addAttribute("message", "If this account exists, an OTP has been sent.");
+        return "reset";
+    }
+
+    
+    
 
 }
