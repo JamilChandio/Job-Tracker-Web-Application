@@ -6,6 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.spring.boot.job.tracker.app.dtos.OtpResponseDto;
+import com.spring.boot.job.tracker.app.dtos.UserResponseDto;
 import com.spring.boot.job.tracker.app.dtos.user.UserLoginDto;
 import com.spring.boot.job.tracker.app.service.AuthenticationService;
 import com.spring.boot.job.tracker.app.service.OTPService;
@@ -37,7 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String processUserLogin(@ModelAttribute("user") UserLoginDto userLoginDto, Model model)throws MessagingException {
+    public String processUserLogin(@ModelAttribute("user") UserLoginDto userLoginDto, Model model)
+            throws MessagingException {
         log.info("Authenticate user for login {}", userLoginDto);
         authService.authenticateUser(userLoginDto);
         return "redirect:/user/dashboard?username=" + userLoginDto.getUsername();
@@ -45,33 +49,43 @@ public class AuthController {
 
     @GetMapping("/reset")
     public String resetPassword(Model model) {
-        model.addAttribute("user", new UserLoginDto());
+        log.info("Rendering Password Reset Form");
         return "reset";
     }
 
     @PostMapping("/OTP")
-    public String sendEmailOTP(@RequestParam("identifier") String email, Model model)throws MessagingException {
+    public String sendEmailOTP(@RequestParam("email") String email, Model model) throws MessagingException {
 
-        log.info("Reset Account for user = {}" , email);
+        log.info("Reset Account for user = {}", email);
 
-        otpService.sendOtp(email);
+        OtpResponseDto responseDto = otpService.sendOtp(email);
 
-        model.addAttribute("message", "If this account exists, an OTP has been sent.");
-        model.addAttribute("email" , email);
+        model.addAttribute("otpMessage",
+                "OTP sent on your email. You can try OTP at most %d times within 5 minutes otherwise OTP will be expired!"
+                        .formatted(responseDto.getMaximumAttempts()));
+        model.addAttribute("email", email);
+        model.addAttribute("attemptsLeft", responseDto.getMaximumAttempts() - responseDto.getAttempts());
         return "otp_verification";
     }
 
     @PostMapping("/verifyOTP")
-    public String verifyOTP(@RequestParam("otp") String otp , @RequestParam("email") String email) {
+    public String verifyOTP(@RequestParam("otp") int otp, @RequestParam("email") String email , Model model) {
 
         // HIDDEN FIELD FROM otp_verification
-        log.info("VERIFY OTP FOR EMAIL: {}" , email);
-        if(otpService.verifyOtp(otp , email))
-            return "redirect:/user/dashboard?username=" + email;
- 
+        log.info("VERIFY OTP FOR EMAIL: {} AND OTP: {}", email, otp);
 
-    
-        return "entity";
+        OtpResponseDto responseDto = otpService.verifyOtp(otp, email);
+
+        if (responseDto.isOtpVerified()) {
+            log.info("OTP:{} Verified for Email:{} | Redirecting to Dashboard... ", otp, email);
+            return "redirect:/user/dashboard?username=" + email;
+        } else {
+            log.info("OTP:{} Verified Not Verified for Email:{}", otp, email);
+            model.addAttribute("email", email);
+            model.addAttribute("attemptsLeft", responseDto.getMaximumAttempts() - responseDto.getAttempts());
+            return "otp_verification";
+
+        }
     }
 
 }

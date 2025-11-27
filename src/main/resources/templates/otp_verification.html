@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Verify OTP - Job Tracker</title>
@@ -9,73 +10,56 @@
 
 <body class="bg-light">
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-lg border-0">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg border-0">
 
-                <!-- Header -->
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>OTP Verification</h3>
-                </div>
-
-                <div class="card-body p-4">
-
-                    <!-- Alert for OTP success/error -->
-                    <div th:if="${otpMessage}"
-                         class="alert alert-warning alert-dismissible fade show"
-                         role="alert">
-                        <span th:text="${otpMessage}">Invalid OTP. A new OTP has been sent.</span>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="alert"
-                                aria-label="Close"></button>
+                    <!-- Header -->
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3>OTP Verification</h3>
                     </div>
 
-                    <p class="text-muted text-center">
-                        Enter the OTP sent to your registered email.
-                    </p>
+                    <div class="card-body p-4">
 
-                    <!-- OTP Form -->
-                    <form th:action="@{/verifyOTP}" method="post">
-
-                        <!-- Hidden field to send email -->
-                        <input type="hidden" name="email" th:value="${email}"/>
-
-                        <div class="mb-3">
-                            <label class="form-label">Enter OTP</label>
-                            <input type="text"
-                                   name="otp"
-                                   class="form-control"
-                                   placeholder="Enter 6-digit OTP"
-                                   required>
+                        <!-- OTP Message with Attempt Counter (Permanent Display) -->
+                        <div th:if="${otpMessage}" class="mb-3 p-3 bg-warning text-dark rounded">
+                            <p class="mb-1" th:text="${otpMessage}"></p>
+                            <small th:text="'OTP Attempts Left: ' + ${attemptsLeft}"></small>
                         </div>
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg">Verify OTP</button>
-                        </div>
+                        <p class="text-muted text-center">
+                            Enter the OTP sent to your registered email.
+                        </p>
 
-                        <div class="text-center mt-3">
-                            <a th:href="@{/password/reset}" class="text-decoration-none">&larr; Back</a>
-                        </div>
-                    </form>
+                        <!-- OTP Form -->
+                        <form th:action="@{/verifyOTP}" method="post">
+
+                            <!-- Hidden field to send email -->
+                            <input type="hidden" name="email" th:value="${email}" />
+
+                            <div class="mb-3">
+                                <label class="form-label">Enter OTP</label>
+                                <input type="text" name="otp" class="form-control" placeholder="Enter 6-digit OTP"
+                                    required>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">Verify OTP</button>
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <a th:href="@{/password/reset}" class="text-decoration-none">&larr; Back</a>
+                            </div>
+                        </form>
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
     </div>
-</div>
-
-<script>
-    const alertBox = document.querySelector('.alert');
-    if (alertBox) {
-        setTimeout(() => {
-            const bsAlert = new bootstrap.Alert(alertBox);
-            bsAlert.close();
-        }, 5000);
-    }
-</script>
 
 </body>
+
 </html>

@@ -31,17 +31,17 @@
                     </div>
 
                     <p class="text-muted text-center">
-                        Enter your username or email to receive an OTP.
+                        Enter your email to receive an OTP.
                     </p>
 
                     <!-- Reset Form -->
                     <form th:action="@{/OTP}" method="post">
                         <div class="mb-3">
-                            <label class="form-label">Username or Email</label>
+                            <label class="form-label">Email</label>
                             <input type="text" 
-                                   name="identifier" 
+                                   name="email" 
                                    class="form-control" 
-                                   placeholder="Enter your username or email" 
+                                   placeholder="Enter your email" 
                                    required>
                         </div>
 

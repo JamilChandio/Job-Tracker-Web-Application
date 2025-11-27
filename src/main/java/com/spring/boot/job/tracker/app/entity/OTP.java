@@ -36,4 +36,7 @@ public class OTP {
 
     @Column(name = "request_ip")
     private String requestIp;
+
+    @Column(name ="max_attempts")
+    private Integer maximumAttempts = 3;
 }

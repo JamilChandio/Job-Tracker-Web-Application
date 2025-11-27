@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.spring.boot.job.tracker.app.dtos.OtpResponseDto;
+import com.spring.boot.job.tracker.app.dtos.UserResponseDto;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +49,12 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmailOTP(String to, String username, int otp) throws MessagingException {
+    public void sendEmailOTP(String email , String fullName , OtpResponseDto response) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, false);
 
         helper.setFrom(fromEmail);
-        helper.setTo(to);
+        helper.setTo(email);
         helper.setSubject("Your Job Tracker Password Reset OTP");
 
         String textContent = """
@@ -63,15 +66,20 @@ public class EmailService {
 
                 This OTP is valid for 5 minutes. Please do not share it with anyone.
 
+                Note: You can try at most %d times within 5 minutes otherwise OTP will be expired!
+
                 If you did not request this, please consider changing your password immediately.
 
                 - Job Tracker Support Team
-                """.formatted(username, otp);
+                """.formatted(fullName, response.getOtp(),response.getMaximumAttempts());
 
         helper.setText(textContent, false);
 
-        log.info("Sending OTP Email to {}", to);
+        log.info("Sending OTP Email to {}", email);
+        log.info("Prepaed Email: {}", textContent);
+
         mailSender.send(message);
+
     }
 
     @Async
