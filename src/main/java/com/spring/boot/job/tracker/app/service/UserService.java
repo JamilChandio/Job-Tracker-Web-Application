@@ -14,6 +14,7 @@ import com.spring.boot.job.tracker.app.exception.UserNotFoundException;
 import com.spring.boot.job.tracker.app.model.User;
 import com.spring.boot.job.tracker.app.repository.UserRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,9 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
     private final UserRepository USER_REPOSITORY;
+    private final EmailService EMAIL_SERIVICE;
 
-    public UserService(UserRepository USER_REPOSITORY) {
+    public UserService(UserRepository USER_REPOSITORY , EmailService EMAIL_SERIVICE) {
         this.USER_REPOSITORY = USER_REPOSITORY;
+        this.EMAIL_SERIVICE = EMAIL_SERIVICE;
     }
 
     public User getUserDetails(String username) {
@@ -55,7 +58,7 @@ public class UserService {
     }
 
     @Transactional
-    public void registerUser(UserRegistrationDto userDto) {
+    public void registerUser(UserRegistrationDto userDto) throws MessagingException {
 
         if (USER_REPOSITORY.existsByUsername(userDto.getUsername())) {
             throw new UserAlreadyExistsException("Username already exists: " + userDto.getUsername());
@@ -83,5 +86,6 @@ public class UserService {
 
         UserEntity savedUser = USER_REPOSITORY.save(userEntity);
         log.info("User registered successfully with ID: {}", savedUser.getUserId());
+        EMAIL_SERIVICE.sendWelcomeEmail(savedUser.getEmail(), savedUser.getFullName());
     }
 }

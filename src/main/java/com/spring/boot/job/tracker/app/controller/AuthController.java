@@ -6,17 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.spring.boot.job.tracker.app.dtos.user.UserLoginDto;
-import com.spring.boot.job.tracker.app.dtos.user.UserRegistrationDto;
 import com.spring.boot.job.tracker.app.service.AuthenticationService;
 import com.spring.boot.job.tracker.app.service.OTPService;
-import com.spring.boot.job.tracker.app.service.UserService;
-
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
 @Controller

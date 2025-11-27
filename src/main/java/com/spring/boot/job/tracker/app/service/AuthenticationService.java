@@ -42,7 +42,7 @@ public class AuthenticationService {
                         () -> new UserAuthenticationException("No User found against given email or username!"));
 
         if (user.getPassword().equals(userLoginDto.getPassword())) {
-            emailServiceObj.sendWelcomeEmail(user.getEmail(), user.getFullName());
+            emailServiceObj.sendLoginAlertEmail(user.getEmail(), user.getFullName());
         } else
             throw new UserAuthenticationException("Invalid Credentials!");
     }

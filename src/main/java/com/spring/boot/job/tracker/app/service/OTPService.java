@@ -2,16 +2,11 @@ package com.spring.boot.job.tracker.app.service;
 
 import com.spring.boot.job.tracker.app.entity.OTP;
 import com.spring.boot.job.tracker.app.entity.UserEntity;
-import com.spring.boot.job.tracker.app.model.User;
 import com.spring.boot.job.tracker.app.repository.RepositoryOTP;
-import com.spring.boot.job.tracker.app.repository.UserRepository;
-
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -49,12 +44,9 @@ public class OTPService {
         otp.setExpiresAt(LocalDateTime.now().plusMinutes(OTP_VALID_MINUTES));
         otp.setAttempts(0);
         otp.setUsed(false);
-
+        
         otpRepository.save(otp);
-
         emailService.sendEmailOTP(email, userEntity.getUsername(), OTP);
-
-
     }
 
     public boolean verifyOtp(String otpInput, String email) {

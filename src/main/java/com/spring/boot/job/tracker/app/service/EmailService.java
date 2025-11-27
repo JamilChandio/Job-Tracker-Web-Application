@@ -1,5 +1,8 @@
 package com.spring.boot.job.tracker.app.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,28 +28,27 @@ public class EmailService {
     }
 
     @Async
-    public void sendWelcomeEmail(String to, String username) throws MessagingException {
+    public void sendWelcomeEmail(String to, String fullName) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setFrom(fromEmail);
         helper.setTo(to);
-        helper.setSubject("Welcome back, " + username + "!");
+        helper.setSubject("Welcome, " + fullName + "!");
         helper.setText("""
-                <h2>Welcome back to Job Tracker 👋</h2>
+                <h2>Welcome to Job Tracker 👋</h2>
                 <p>Hello <b>%s</b>,</p>
-                <p>We’re glad to see you again! You can continue tracking your applications and progress easily.</p>
+                <p>We’re glad to see you! You can continue tracking your applications and progress easily.</p>
                 <p>– The Job Tracker Team</p>
-                """.formatted(username), true);
-        log.info("Sending Welcome Email to {}",to);
+                """.formatted(fullName), true);
+        log.info("Sending Welcome Email to {}", to);
         mailSender.send(message);
     }
-
 
     @Async
     public void sendEmailOTP(String to, String username, int otp) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, false); 
+        MimeMessageHelper helper = new MimeMessageHelper(message, false);
 
         helper.setFrom(fromEmail);
         helper.setTo(to);
@@ -66,9 +68,38 @@ public class EmailService {
                 - Job Tracker Support Team
                 """.formatted(username, otp);
 
-        helper.setText(textContent, false); 
+        helper.setText(textContent, false);
 
         log.info("Sending OTP Email to {}", to);
+        mailSender.send(message);
+    }
+
+    @Async
+    public void sendLoginAlertEmail(String to, String fullName) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, false);
+
+        helper.setFrom(fromEmail);
+        helper.setTo(to);
+        helper.setSubject("Login Alert!");
+
+        String dateTime = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy 'at' hh:mm a"));
+
+        String textContent = """
+                Hello %s,
+
+                You have successfully logged in to your account on Job Tracker at %s.
+
+                - Job Tracker Support Team
+                """.formatted(fullName, dateTime);
+
+        helper.setText(textContent, false);
+
+        log.info("Sending Login Alert Email to: {}", to);
+        log.info("Prepaed Email: {}", textContent);
+
         mailSender.send(message);
     }
 
